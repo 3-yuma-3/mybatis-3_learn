@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.ibatis.learn_with_sakila.mapper.FilmMapper">
+    <resultMap id="filmMap" type="org.apache.ibatis.learn_with_sakila.entity.Film">
+        <id property="filmId" column="film_id" />
+        <result property="title" column="title" />
+        <collection property="actorList" resultMap="actorMap" />
+    </resultMap>
+
+    <resultMap id="actorMap" type="org.apache.ibatis.learn_with_sakila.entity.Actor">
+        <id property="actorId" column="actor_id" />
+        <result property="firstName" column="first_name" />
+        <result property="lastName" column="last_name" />
+    </resultMap>
+
+    <select id="selectFilm" resultMap="filmMap">
+        SELECT
+            film.film_id
+            , film.title
+            , actor.actor_id
+            , actor.first_name
+            , actor.last_name
+        FROM
+            film
+        LEFT JOIN film_actor
+            on film_actor.film_id = film.film_id
+        LEFT JOIN actor
+            on actor.actor_id = film_actor.actor_id
+        WHERE
+            film.film_id = #{id};
+    </select>
+</mapper>
